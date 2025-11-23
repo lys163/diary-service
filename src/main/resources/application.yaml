@@ -1,3 +1,33 @@
 spring:
   application:
     name: diary
+  datasource:
+    url: jdbc:postgresql://localhost:5432/diaryon
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    # open-in-view : Open-In-View (OIV) 패턴
+    # OIV는 $\text{HTTP}$ 요청이 끝날 때까지 $\text{JPA}$ EntityManager (또는 $\text{Hibernate Session}$)를 열어두어,
+    # View (화면 렌더링) 단계에서 지연 로딩(Lazy Loading)을 통해 데이터베이스 쿼리를 수행할 수 있게 합니다.
+    # 이는 편리하지만, 웹 요청이 길어지거나 뷰 계층에서 과도하게 데이터를 요청할 경우 데이터베이스 연결을 너무 오랫동안 점유하여 성능 문제를 일으킬 수 있어 
+    # 일반적으로 프로덕션 환경에서는 비활성화할 것을 권장합니다.
+    # lazy loading:지연로딩
+    # 초기 조회: 메인 엔티티(예: User)를 조회할 때, 
+    # 연관된 엔티티(예: List<Diary>)는 실제 데이터가 아닌 $\text{Hibernate}$가 생성한 **가짜 객체 (프록시)**로 채워집니다. 
+    # 이 시점에는 $\text{SQL}$ 쿼리가 한 번만 실행됩니다.
+    # 데이터 접근: 개발자가 이 프록시 객체의 실제 데이터에 접근하는 순간 (예: user.getDiaries().get(0)), $\text{Hibernate}$가 그때서야 
+    # 데이터베이스에 추가적인 $\text{SQL}$ 쿼리를 날려 실제 데이터를 로드합니다.
+    open-in-view: false
+    show-sql: true
+    # database: postgresql
+    hibernate:
+      ddl-auto: update
+
+jwt:
+  # JWT Secret Key (최소 256비트 이상 필요)
+  secret: 77495d85576a303b9e28b659a4121ee5f3843b704f39f2e597e44a171cd507c5
+  # JWT 토큰 유효 시간 (밀리초)
+  # 86400000ms = 24시간
+  # 3600000ms = 1시간
+  expiration: 86400000
