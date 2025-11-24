@@ -2,6 +2,7 @@ package com.diaryon.diary.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
  */
 
 @Component
+@Slf4j
 public class JwtTokenProvider {
     // application.properties에서 주입
     @Value("${jwt.secret}")
@@ -30,7 +32,7 @@ public class JwtTokenProvider {
     // application.properties에서 주입
     // jwt.expiration=86400000 (24시간)
     @Value("${jwt.expiration}")
-    private String validityInMilliseconds;
+    private Long validityInMilliseconds;
 
     /**
      * JWT 토큰 생성
@@ -42,6 +44,7 @@ public class JwtTokenProvider {
      */
 
     public String generateToken(Authentication authentication){
+
         // 인증된 사용자 정보 추출
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
@@ -61,7 +64,7 @@ public class JwtTokenProvider {
                 .claim("roles",roles)                              // 권한 정보 (payload의 roles)
                 .setIssuedAt(now)                                        // 발급 시간 (iat)
                 .setExpiration(expiryDate)                               // 만료 시간 (exp)
-                .signWith(getSigningKey(), SignatureAlgorithm.ES256)     // 서명 (HMAC SHA-256)
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)     // 서명 (HMAC SHA-256)
                 .compact();
     }
 

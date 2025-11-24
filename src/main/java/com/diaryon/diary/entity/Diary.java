@@ -53,7 +53,7 @@ public class Diary {
     private LocalDate diaryDate;
 
     /**
-     * 일기 작성 시의 기분 상태 (선택사항)
+     * 일기 작성 시의 기분 상태
      * - STRING으로 저장: "HAPPY", "SAD" 등 문자열 저장 (안전함)
      */
     @Enumerated(EnumType.STRING)
