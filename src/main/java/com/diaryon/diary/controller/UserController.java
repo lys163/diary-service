@@ -96,10 +96,13 @@ public class UserController {
      */
     @DeleteMapping("/me")
     public ResponseEntity<Void> deleteMyAccount(
-            @AuthenticationPrincipal String username,
-            @Valid @RequestBody PasswordConfirmRequest request) {
+            @AuthenticationPrincipal String username
+            //, @Valid @RequestBody PasswordConfirmRequest request
+    ) {
         log.info("회원 탈퇴 요청: username={}", username);
-        userService.deleteUser(username, request.getPassword());
+        userService.deleteUser(username
+                //, request.getPassword()
+        );
         return ResponseEntity.noContent().build();
     }
 

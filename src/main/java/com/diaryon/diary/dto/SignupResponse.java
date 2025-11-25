@@ -12,6 +12,7 @@ import lombok.*;
 @Builder
 public class SignupResponse {
     private Long userid;
+    private String nickname;
     private String username;
     private String email;
     private String message;

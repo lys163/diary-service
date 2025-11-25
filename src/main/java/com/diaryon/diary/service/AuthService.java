@@ -58,6 +58,7 @@ public class AuthService {
         // 3. user 엔티티 생성
         User user = User.builder()
                 .username(request.getUsername())
+                .nickname(request.getNickname())
                 .email(request.getEmail())
                 .passwd(passwordEncoder.encode(request.getPassword()))
                 .age(request.getAge())
@@ -71,6 +72,7 @@ public class AuthService {
         return SignupResponse.builder()
                 .userid(savedUser.getUserId())
                 .username(savedUser.getUsername())
+                .nickname(savedUser.getNickname())
                 .email(savedUser.getEmail())
                 .message("회원가입이 완료되었습니다.")
                 .build();
@@ -112,6 +114,7 @@ public class AuthService {
                     .token(token)
                     .type("Bearer")
                     .userId(user.getUserId())
+                    .nickname(user.getNickname())
                     .username(user.getUsername())
                     .email(user.getEmail())
                     .roles(roles)

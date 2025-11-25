@@ -59,6 +59,7 @@ public class UserService {
      * 수정 가능한 필드:
      * - email: 이메일 변경 (중복 체크 필요)
      * - age: 나이 변경
+     * - nickname : 닉네임 변경
      *
      * 수정 불가능한 필드:
      * - username: Primary Key이므로 변경 불가
@@ -81,11 +82,12 @@ public class UserService {
             // 이메일 변경은 실무에서는 인증 메일 발송 후 확인하는 것이 일반적
             // 학습용이므로 바로 변경
         }
-
+        log.info(request.getNickname());
         // 엔티티 수정 (Dirty Checking으로 자동 UPDATE)
         // 실무에서는 User 엔티티에 update 메서드를 만들어 사용하는 것이 좋음
         User updatedUser = User.builder()
                 .userId(user.getUserId())
+                .nickname(user.getNickname() != null ? request.getNickname() : user.getNickname())
                 .username(user.getUsername())
                 .email(request.getEmail() != null ? request.getEmail() : user.getEmail())
                 .passwd(user.getPasswd())
@@ -94,9 +96,10 @@ public class UserService {
                 .diaries(user.getDiaries())
                 .createdAt(user.getCreatedAt())
                 .build();
-
+        log.info("사용자 정보 수정 완료: nickname={}", updatedUser.getNickname());
         userRepository.save(updatedUser);
         log.info("사용자 정보 수정 완료: username={}", username);
+
 
         return convertToResponse(updatedUser);
     }
@@ -135,6 +138,7 @@ public class UserService {
         User updatedUser = User.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .passwd(passwordEncoder.encode(request.getNewPassword()))
                 .age(user.getAge())
@@ -166,16 +170,18 @@ public class UserService {
      * - 클라이언트에서 토큰 삭제 필요
      *
      * @param username 현재 로그인한 사용자명
-     * @param password 비밀번호 확인용
+//     * @param password 비밀번호 확인용
      */
     @Transactional
-    public void deleteUser(String username, String password) {
+    public void deleteUser(String username
+//            , String password
+            ) {
         User user = findUserByUsername(username);
 
         // 비밀번호 확인 (본인 확인)
-        if (!passwordEncoder.matches(password, user.getPasswd())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
-        }
+//        if (!passwordEncoder.matches(password, user.getPasswd())) {
+//            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다");
+//        }
 
         // 사용자 삭제 (cascade로 일기도 함께 삭제됨)
         userRepository.delete(user);
@@ -240,6 +246,7 @@ public class UserService {
         User updatedUser = User.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .passwd(user.getPasswd())
                 .age(user.getAge())
@@ -342,6 +349,7 @@ public class UserService {
         return UserResponse.builder()
                 .userId(user.getUserId())
                 .username(user.getUsername())
+                .nickname(user.getNickname())
                 .email(user.getEmail())
                 .age(user.getAge())
                 .roles(user.getRoles())

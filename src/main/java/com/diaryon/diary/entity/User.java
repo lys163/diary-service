@@ -31,6 +31,9 @@ public class User {
     @Column(name = "user_id") // 컬럼명 명시적 지정
     private Long userId;
 
+    @Column(name= "nickname", nullable = false, length = 20)
+    private String nickname;
+
     @Column(name = "username", nullable = false, unique = true, length = 50) // NOT NULL, UNIQUE 제약조건, 최대 길이 50
     private String username; // 로그인용 사용자명
 

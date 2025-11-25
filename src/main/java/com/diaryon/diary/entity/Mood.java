@@ -6,8 +6,8 @@ package com.diaryon.diary.entity;
  * - DB에는 문자열로 저장 (예: "HAPPY")
  */
 public enum Mood {
-    VERY_HAPPY("😄", "매우 행복함"),
-    HAPPY("😊", "행복함"),
+    HAPPY("😄", "행복함"),
+    LOVE("😊", "사랑"),
     NEUTRAL("😐", "보통"),
     SAD("😢", "슬픔"),
     ANGRY("😠", "화남");

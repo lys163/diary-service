@@ -16,6 +16,7 @@ import java.util.Set;
 public class LoginResponse {
     private String token;
     private String type = "Bearer";
+    private String nickname;
     private Long userId;
     private String username;
     private String email;

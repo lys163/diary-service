@@ -18,6 +18,7 @@ import java.util.Set;
 public class UserResponse {
     private Long userId;
     private String username;
+    private String nickname;
     private String email;
     private Integer age;
     private Set<Role> roles;
