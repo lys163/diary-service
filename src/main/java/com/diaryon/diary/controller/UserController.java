@@ -5,6 +5,7 @@ import com.diaryon.diary.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -12,7 +13,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 사용자 관리 API 컨트롤러
@@ -77,12 +82,25 @@ public class UserController {
      * - 새 비밀번호는 유효성 검증 통과해야 함
      */
     @PutMapping("/me/password")
-    public ResponseEntity<Void> changePassword(
+    public ResponseEntity<?> changePassword(
             @AuthenticationPrincipal String username,
-            @Valid @RequestBody PasswordChangeRequest request) {
-        log.info("비밀번호 변경 요청: username={}", username);
-        userService.changePassword(username, request);
-        return ResponseEntity.ok().build();
+            @Valid @RequestBody PasswordChangeRequest request, BindingResult result) {
+
+        if (result.hasErrors()){
+            List<String> errorMessages = result.getAllErrors().stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage) // 각 에러 메시지 추출
+                    .collect(Collectors.toList());
+            return ResponseEntity.status(400).body(errorMessages);
+        }
+        try{
+            userService.changePassword(username, request);
+            return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+        }catch (Exception e){
+            return ResponseEntity.status(400).body(e);
+        }
+
+
+
     }
 
     /**
