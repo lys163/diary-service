@@ -20,6 +20,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -72,11 +73,47 @@ public class DiaryService {
     /**
      * 일기 상세 조회
      */
-    @Transactional(readOnly = true)
-    public DiaryResponse getDiary(String username, Long diaryId) {
-        Diary diary = findDiaryById(diaryId);
-        validateOwner(username, diary);
-        return convertToResponse(diary);
+//    @Transactional(readOnly = true)
+//    public DiaryResponse getDiary(String username, Long diaryId) {
+//        Diary diary = findDiaryById(diaryId);
+//        validateOwner(username, diary);
+//        return convertToResponse(diary);
+//    }
+    @Transactional
+    public DiaryResponse getDiaryByDate(String username,LocalDate date){
+//        Optional<Diary> optionalDiary = diaryRepository.findByUserUsernameAndDiaryDate(username, date);
+//
+//        if (optionalDiary.isPresent()){
+//            Diary diary = optionalDiary.get();
+//            return DiaryResponse.builder()
+//                .id(diary.getId())
+//                .title(diary.getTitle())
+//                .content(diary.getContent())
+//                .diaryDate(diary.getDiaryDate())
+//                .mood(diary.getMood())
+//                .moodEmoji(diary.getMood().getEmoji())
+//                .moodDescription(diary.getMood().getDescription())
+//                .username(diary.getUser().getUsername())
+//                .createdAt(diary.getCreatedAt())
+//                .updatedAt(diary.getUpdatedAt())
+//                .build();
+//        }else {
+//            return null;
+//        }
+        Diary diary = diaryRepository.findByUserUsernameAndDiaryDate(username,date)
+                .orElseThrow(()->new IllegalArgumentException("해당날자 일기 찾을 수 없음"));
+        return DiaryResponse.builder()
+                .id(diary.getId())
+                .title(diary.getTitle())
+                .content(diary.getContent())
+                .diaryDate(diary.getDiaryDate())
+                .mood(diary.getMood())
+                .moodEmoji(diary.getMood().getEmoji())
+                .moodDescription(diary.getMood().getDescription())
+                .username(diary.getUser().getUsername())
+                .createdAt(diary.getCreatedAt())
+                .updatedAt(diary.getUpdatedAt())
+                .build();
     }
 
     /**

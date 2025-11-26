@@ -7,7 +7,7 @@ package com.diaryon.diary.entity;
  */
 public enum Mood {
     HAPPY("😄", "행복함"),
-    LOVE("😊", "사랑"),
+    LOVE("\uD83E\uDD70", "사랑"),
     NEUTRAL("😐", "보통"),
     SAD("😢", "슬픔"),
     ANGRY("😠", "화남");

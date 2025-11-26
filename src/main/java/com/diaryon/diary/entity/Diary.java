@@ -43,10 +43,10 @@ public class Diary {
     @JoinColumn(name = "user_id", nullable = false) // 외래키 컬럼명 지정
     private User user;
 
-    @Column(nullable = false, length = 200) // 제목은 필수, 최대 200자
+    @Column(length = 200) // 제목은 필수, 최대 200자
     private String title;
 
-    @Column(nullable = false, columnDefinition = "TEXT") // 내용은 필수, 긴 텍스트 저장
+    @Column(columnDefinition = "TEXT") // 내용은 필수, 긴 텍스트 저장
     private String content;
 
     @Column(name = "diary_date", nullable = false) // 일기 작성 날짜 (필수)

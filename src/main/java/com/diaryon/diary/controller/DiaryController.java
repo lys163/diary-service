@@ -12,10 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/diaries")
@@ -55,15 +58,30 @@ public class DiaryController {
      * 일기 상세 조회
      * GET /api/diaries/{id}
      */
-    @GetMapping("/{id}")
+//    @GetMapping("/{id}")
+//    public ResponseEntity<DiaryResponse> getDiary(
+//            @AuthenticationPrincipal String username,
+//            @PathVariable Long id) {
+//        log.info("일기 상세 조회: username={}, diaryId={}", username, id);
+//        DiaryResponse response = diaryService.getDiary(username, id);
+//        return ResponseEntity.ok(response);
+//    }
+    @GetMapping("/{date}")
     public ResponseEntity<DiaryResponse> getDiary(
             @AuthenticationPrincipal String username,
-            @PathVariable Long id) {
-        log.info("일기 상세 조회: username={}, diaryId={}", username, id);
-        DiaryResponse response = diaryService.getDiary(username, id);
-        return ResponseEntity.ok(response);
-    }
+            @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
+        log.info("일기 상세 조회: username={}, diaryId={}", username, date);
+
+//        DiaryResponse response = diaryService.getDiary(username, id);
+        try{
+            DiaryResponse response = diaryService.getDiaryByDate(username,date);
+            return ResponseEntity.ok(response);
+        }catch (IllegalArgumentException ex){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+    }
     /**
      * 일기 수정
      * PUT /api/diaries/{id}

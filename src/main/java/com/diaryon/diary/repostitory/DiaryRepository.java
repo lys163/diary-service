@@ -14,6 +14,7 @@ import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary,Long> {
 
+    Optional<Diary> findByUserUsernameAndDiaryDate(String username,LocalDate diaryDate);
     /**
      * 특정 사용자의 일기 목록 조회 (페이징)
      */
